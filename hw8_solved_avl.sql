@@ -11,17 +11,28 @@ select actor_id,first_name,last_name from actor where last_name like '%GEN%';
 -- 2c. Find all actors whose last names contain the letters `LI`. This time, order the rows by last name and first name, in that order:
 select last_name,first_name from actor where last_name like '%LI%' order by last_name, first_name;
 -- 2d. Using `IN`, display the `country_id` and `country` columns of the following countries: Afghanistan, Bangladesh, and China:
-
+select country_id, country from country where country in ('Afghanistan', 'Bangladesh', 'China');
 -- 3a. Add a `middle_name` column to the table `actor`. Position it between `first_name` and `last_name`. Hint: you will need to specify the data type.
-  	
+alter table actor 
+		add middle_name varchar(30);
+select first_name, middle_name, last_name from actor;
 -- 3b. You realize that some of these actors have tremendously long last names. Change the data type of the `middle_name` column to `blobs`.
-
+alter table actor
+		change column middle_name middle_name blob;
 -- 3c. Now delete the `middle_name` column.
-
+alter table actor
+		drop column middle_name;
 -- 4a. List the last names of actors, as well as how many actors have that last name.
-  	
+select distinct(last_name), count(last_name) as count_names from actor group by last_name;
 -- 4b. List last names of actors and the number of actors who have that last name, but only for names that are shared by at least two actors
-  	
+drop table if exists common_names;
+create table common_names (
+ast_name varchar(30) not null,
+count_names integer default 1
+);
+insert into common_names
+select distinct(last_name), count(last_name) as count_names from actor group by last_name;
+select * from common_names where count_names >=2;
 -- 4c. Oh, no! The actor `HARPO WILLIAMS` was accidentally entered in the `actor` table as `GROUCHO WILLIAMS`, the name of Harpo's second cousin's husband's yoga teacher. Write a query to fix the record.
   	
 -- 4d. Perhaps we were too hasty in changing `GROUCHO` to `HARPO`. It turns out that `GROUCHO` was the correct name after all! In a single query, if the first name of the actor is currently `HARPO`, change it to `GROUCHO`. Otherwise, change the first name to `MUCHO GROUCHO`, as that is exactly what the actor will be with the grievous error. BE CAREFUL NOT TO CHANGE THE FIRST NAME OF EVERY ACTOR TO `MUCHO GROUCHO`, HOWEVER! (Hint: update the record using a unique identifier.)
