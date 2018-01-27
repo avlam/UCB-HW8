@@ -38,7 +38,7 @@ select distinct(last_name), count(last_name) as count_names from actor group by 
 -- 4b. List last names of actors and the number of actors who have that last name, but only for names that are shared by at least two actors
 drop table if exists common_names;
 create table common_names (
-ast_name varchar(30) not null,
+last_name varchar(30) not null,
 count_names integer default 1
 );
 insert into common_names
