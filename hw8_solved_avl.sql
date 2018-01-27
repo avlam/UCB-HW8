@@ -151,11 +151,38 @@ group by title
 order by times_rented desc;
     
 -- 7f. Write a query to display how much business, in dollars, each store brought in.
+select s.store_id, sum(pay.amount) as business
+from store s
+join inventory
+using (store_id)
+join rental
+using(inventory_id)
+join payment pay
+using(rental_id)
+group by store_id
+order by business desc;
 
 -- 7g. Write a query to display for each store its store ID, city, and country.
-  	
+select s.store_id,city.city,country.country
+from store s
+join address
+using(address_id)
+join city 
+using(city_id)
+join country
+using(country_id);
+    
 -- 7h. List the top five genres in gross revenue in descending order. (----Hint----: you may need to use the following tables: category, film_category, inventory, payment, and rental.)
-  	
+select cat.name genre, sum(payment.amount) as revenue
+from category cat
+join film_category using(category_id)
+join inventory using(film_id)
+join rental using(inventory_id)
+join payment using(rental_id)
+group by genre 
+order by revenue desc
+limit 5;
+    
 -- 8a. In your new role as an executive, you would like to have an easy way of viewing the Top five genres by gross revenue. Use the solution from the problem above to create a view. If you haven't solved 7h, you can substitute another query to create a view.
   	
 -- 8b. How would you display the view that you created in 8a?
